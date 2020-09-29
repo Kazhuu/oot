@@ -9,7 +9,21 @@ void EnFish_Destroy(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Update(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Draw(Actor* thisx, GlobalContext* globalCtx);
 
-/*
+extern SkeletonHeader* D_4018FE0;
+extern AnimationHeader* D_401909C;
+
+s32 D_80A17010[] = { 0x00000000 };
+s32 D_80A17014[] = { 0x00000000 };
+s32 D_80A17018[] = { 0x00000000 };
+s32 D_80A1701C[] = { 0x00000000, 0x00000000, 0x00000000, 0xFFCFFFFF, 0x00000000, 0x00000100, 0x00000000, 0x00000000, 0x00050064 };
+
+// D_80A17040
+static ColliderJntSphInit sJntSphInit =
+{
+    { COLTYPE_UNK10, 0x00, 0x00, 0x39, 0x10, COLSHAPE_JNTSPH },
+    1, &D_80A1701C,
+};
+
 const ActorInit En_Fish_InitVars = {
     ACTOR_EN_FISH,
     ACTORTYPE_ITEMACTION,
@@ -21,7 +35,27 @@ const ActorInit En_Fish_InitVars = {
     (ActorFunc)EnFish_Update,
     (ActorFunc)EnFish_Draw,
 };
-*/
+
+// sInitChain
+InitChainEntry D_80A17070[] = {
+    ICHAIN_VEC3F_DIV1000(scale, 10, ICHAIN_CONTINUE),
+    ICHAIN_F32(uncullZoneForward, 900, ICHAIN_CONTINUE),
+    ICHAIN_F32(uncullZoneScale, 40, ICHAIN_CONTINUE),
+    ICHAIN_F32(uncullZoneDownward, 700, ICHAIN_STOP),
+};
+
+s32 D_80A17080[] = { 0x00000000, 0x3D23D70A, 0x3DB851EC };
+s32 D_80A1708C[] = { 0x3F000000, 0x3DCCCCCD, 0x3E19999A, 0x00000000, 0x00000000 };
+
+/*f32 func_80A15280(void *arg0, void *arg1) {*/
+    /*f32 temp_f12;*/
+    /*f32 temp_f2;*/
+
+    /*temp_f2 = arg0->unk0 - arg1->unk0;*/
+    /*temp_f12 = arg0->unk8 - arg1->unk8;*/
+    /*return (temp_f2 * temp_f2) + (temp_f12 * temp_f12);*/
+/*}*/
+
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15280.s")
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A152AC.s")
@@ -34,7 +68,35 @@ const ActorInit En_Fish_InitVars = {
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15444.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/EnFish_Init.s")
+/*#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/EnFish_Init.s")*/
+
+float D_80A17194 = 65535.5;
+float D_80A17198 = 65535.5;
+
+void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
+    s16 sp3A;
+    EnFish* this = THIS;
+
+    sp3A = this->actor.params;
+    Actor_ProcessInitChain(&this->actor, D_80A17070);
+    SkelAnime_InitSV(globalCtx, &this->skelAnime, D_4018FE0, D_401909C, &this->limbDrawTable, &this->unk_21A, 7);
+    Collider_InitJntSph(globalCtx, &this->collider);
+    Collider_SetJntSph(globalCtx, &this->collider, &this->actor, &sJntSphInit, &this->colliderItems);
+    this->actor.colChkInfo.mass = (u8)0x32U;
+    this->unk24C = (s16) (s32) (Math_Rand_ZeroOne() * D_80A17194);
+    this->unk24E = (s16) (s32) (Math_Rand_ZeroOne() * D_80A17198);
+    if (sp3A == 0) {
+        this->actor.flags = (u32) (this->actor.flags | 0x10);
+        ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawFunc_Circle, 8.0f);
+        func_80A15F24(this);
+        return;
+    }
+    if (sp3A == 1) {
+        func_80A16618(this, 0.0f, &ActorShadow_DrawFunc_Circle);
+        return;
+    }
+    func_80A157A4(this, 0.0f, &ActorShadow_DrawFunc_Circle);
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/EnFish_Destroy.s")
 
