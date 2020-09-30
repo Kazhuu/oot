@@ -9,19 +9,26 @@ void EnFish_Destroy(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Update(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Draw(Actor* thisx, GlobalContext* globalCtx);
 
-extern SkeletonHeader* D_4018FE0;
-extern AnimationHeader* D_401909C;
+extern SkeletonHeader D_04018FE0;
+extern AnimationHeader D_0401909C;
 
 s32 D_80A17010[] = { 0x00000000 };
 s32 D_80A17014[] = { 0x00000000 };
 s32 D_80A17018[] = { 0x00000000 };
-s32 D_80A1701C[] = { 0x00000000, 0x00000000, 0x00000000, 0xFFCFFFFF, 0x00000000, 0x00000100, 0x00000000, 0x00000000, 0x00050064 };
+
+// sJntSphItemsInit
+static ColliderJntSphItemInit D_80A1701C[1] = {
+    {
+        { 0x00, { 0x00000000, 0x00, 0x00 }, { 0xFFCFFFFF, 0x00, 0x00 }, 0x00, 0x00, 0x01 },
+        { 0, { { 0, 0, 0 }, 5 }, 100 },
+    },
+};
 
 // D_80A17040
 static ColliderJntSphInit sJntSphInit =
 {
     { COLTYPE_UNK10, 0x00, 0x00, 0x39, 0x10, COLSHAPE_JNTSPH },
-    1, &D_80A1701C,
+    1, D_80A1701C,
 };
 
 const ActorInit En_Fish_InitVars = {
@@ -79,7 +86,7 @@ void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
 
     sp3A = this->actor.params;
     Actor_ProcessInitChain(&this->actor, D_80A17070);
-    SkelAnime_InitSV(globalCtx, &this->skelAnime, D_4018FE0, D_401909C, &this->limbDrawTable, &this->unk_21A, 7);
+    SkelAnime_InitSV(globalCtx, &this->skelAnime, &D_04018FE0, &D_0401909C, &this->limbDrawTable, &this->unk_21A, 7);
     Collider_InitJntSph(globalCtx, &this->collider);
     Collider_SetJntSph(globalCtx, &this->collider, &this->actor, &sJntSphInit, &this->colliderItems);
     this->actor.colChkInfo.mass = (u8)0x32U;
@@ -92,10 +99,10 @@ void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
         return;
     }
     if (sp3A == 1) {
-        func_80A16618(this, 0.0f, &ActorShadow_DrawFunc_Circle);
+        func_80A16618(this, 0.0f, ActorShadow_DrawFunc_Circle);
         return;
     }
-    func_80A157A4(this, 0.0f, &ActorShadow_DrawFunc_Circle);
+    func_80A157A4(this, 0.0f, ActorShadow_DrawFunc_Circle);
 }
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/EnFish_Destroy.s")

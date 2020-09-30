@@ -17,7 +17,10 @@ typedef struct EnFish {
     /* 0x0220 */ char unk_220[0xC];
     /* 0x022C */ s16 unk_22C;
     /* 0x022E */ s16 unk_22E;
-    /* 0x0230 */ char unk_230[0x24];
+    /* 0x0230 */ char unk_230[0x1C];
+    /* 0x024C */ s16 unk24C;
+    /* 0x024E */ s16 unk24E;
+    /* 0x0250 */ char unk_250[0x4];
 } EnFish; // size = 0x0254
 
 extern const ActorInit En_Fish_InitVars;
