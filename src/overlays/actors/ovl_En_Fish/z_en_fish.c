@@ -8,6 +8,7 @@ void EnFish_Init(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Destroy(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Update(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Draw(Actor* thisx, GlobalContext* globalCtx);
+void func_80A15F84(EnFish*, GlobalContext*);
 
 extern SkeletonHeader D_04018FE0;
 extern AnimationHeader D_0401909C;
@@ -16,8 +17,8 @@ s32 D_80A17010[] = { 0x00000000 };
 s32 D_80A17014[] = { 0x00000000 };
 s32 D_80A17018[] = { 0x00000000 };
 
-// sJntSphItemsInit
-ColliderJntSphItemInit D_80A1701C[1] = {
+// D_80A1701C
+static ColliderJntSphItemInit sJntSphItemsInit[1] = {
     {
         { 0x00, { 0x00000000, 0x00, 0x00 }, { 0xFFCFFFFF, 0x00, 0x00 }, 0x00, 0x00, 0x01 },
         { 0, { { 0, 0, 0 }, 5 }, 100 },
@@ -28,7 +29,7 @@ ColliderJntSphItemInit D_80A1701C[1] = {
 static ColliderJntSphInit sJntSphInit =
 {
     { COLTYPE_UNK10, 0x00, 0x00, 0x39, 0x10, COLSHAPE_JNTSPH },
-    1, D_80A1701C,
+    1, sJntSphItemsInit,
 };
 
 const ActorInit En_Fish_InitVars = {
@@ -44,7 +45,7 @@ const ActorInit En_Fish_InitVars = {
 };
 
 // D_80A17070
-InitChainEntry sInitChain[] = {
+static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 10, ICHAIN_CONTINUE),
     ICHAIN_F32(uncullZoneForward, 900, ICHAIN_CONTINUE),
     ICHAIN_F32(uncullZoneScale, 40, ICHAIN_CONTINUE),
@@ -65,6 +66,8 @@ s32 D_80A1708C[] = { 0x3F000000, 0x3DCCCCCD, 0x3E19999A, 0x00000000, 0x00000000 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A153AC.s")
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15444.s")
+
+void func_80A15F24(EnFish *this);
 
 void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
     EnFish* this = THIS;
@@ -114,7 +117,15 @@ void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15D68.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15F24.s")
+void func_80A15F24(EnFish *this) {
+    this->actor.gravity = -1.0f;
+    this->actor.minVelocityY = -10.0f;
+    this->actor.shape.unk_08 = 0.0f;
+    func_80A15310();
+    this->unk_250 = (void *)5;
+    this->actionFunc = func_80A15F84;
+    this->unk_248 = 0x12C;
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15F84.s")
 
