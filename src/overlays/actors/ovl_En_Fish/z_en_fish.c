@@ -11,9 +11,11 @@ void EnFish_Draw(Actor* thisx, GlobalContext* globalCtx);
 void func_80A15F84(EnFish*, GlobalContext*);
 void func_80A16670(EnFish*, GlobalContext*);
 void func_80A157FC(EnFish*, GlobalContext*);
+void func_80A15944(EnFish*, GlobalContext*);
 void func_80A15F24(EnFish* this);
 void func_80A16618(EnFish* this);
 void func_80A157A4(EnFish *this);
+void func_80A158EC(EnFish* this);
 
 extern SkeletonHeader D_04018FE0;
 extern AnimationHeader D_0401909C;
@@ -120,9 +122,41 @@ void func_80A157A4(EnFish *this) {
     this->actionFunc = func_80A157FC;
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A157FC.s")
+void func_80A157FC(EnFish *this, GlobalContext *globalCtx) {
+    f32 temp_f0;
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A158EC.s")
+    func_80A155D0();
+    Math_SmoothScaleMaxMinF(&this->actor.speedXZ, 0.0f, 0.05f, 0.3f, 0.0f);
+    temp_f0 = (this->actor.speedXZ * 1.4f) + 0.8f;
+    if (2.0f < temp_f0) {
+        this->skelAnime.animPlaybackSpeed = 2.0f;
+    } else {
+        this->skelAnime.animPlaybackSpeed = temp_f0;
+    }
+    SkelAnime_FrameUpdateMatrix(&this->skelAnime);
+    this->actor.shape.rot.y = (s16) this->actor.posRot.rot.y;
+    if (this->unk_248 <= 0) {
+        func_80A158EC(this);
+        return;
+    }
+    if (&this->actor == this->actor.child) {
+        func_80A15D18(this);
+        return;
+    }
+    if (func_80A15774(this, globalCtx) != 0) {
+        func_80A15AD4(this);
+    }
+}
+
+void func_80A158EC(EnFish* this) {
+    this->actor.gravity = 0.0f;
+    this->actor.minVelocityY = 0.0f;
+    this = this;
+    this->unk_248 = Math_Rand_S16Offset((u16)0xF, (u16)0x2D);
+    this->unk_250 = NULL;
+    func_80A152AC(this);
+    this->actionFunc = func_80A15944;
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15944.s")
 
