@@ -9,9 +9,13 @@ void EnFish_Destroy(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Update(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Draw(Actor* thisx, GlobalContext* globalCtx);
 void func_80A15F84(EnFish*, GlobalContext*);
+void func_80A16670(EnFish*, GlobalContext*);
+void func_80A15F24(EnFish* this);
+void func_80A16618(EnFish *this);
 
 extern SkeletonHeader D_04018FE0;
 extern AnimationHeader D_0401909C;
+extern AnimationHeader D_040185FC;
 
 s32 D_80A17010[] = { 0x00000000 };
 s32 D_80A17014[] = { 0x00000000 };
@@ -59,7 +63,9 @@ s32 D_80A1708C[] = { 0x3F000000, 0x3DCCCCCD, 0x3E19999A, 0x00000000, 0x00000000 
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A152AC.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15310.s")
+void func_80A15310(EnFish* this) {
+    SkelAnime_ChangeAnim(&this->skelAnime, &D_040185FC, 1.0f, 0.0f, SkelAnime_GetFrameCount(&D_040185FC.genericHeader), 1, 2.0f);
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15374.s")
 
@@ -67,7 +73,6 @@ s32 D_80A1708C[] = { 0x3F000000, 0x3DCCCCCD, 0x3E19999A, 0x00000000, 0x00000000 
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15444.s")
 
-void func_80A15F24(EnFish *this);
 
 void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
     EnFish* this = THIS;
@@ -121,7 +126,7 @@ void func_80A15F24(EnFish *this) {
     this->actor.gravity = -1.0f;
     this->actor.minVelocityY = -10.0f;
     this->actor.shape.unk_08 = 0.0f;
-    func_80A15310();
+    func_80A15310(this);
     this->unk_250 = (void *)5;
     this->actionFunc = func_80A15F84;
     this->unk_248 = 0x12C;
@@ -137,7 +142,15 @@ void func_80A15F24(EnFish *this) {
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A16450.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A16618.s")
+void func_80A16618(EnFish *this) {
+    this->actor.gravity = 0.0f;
+    this->actor.minVelocityY = 0.0f;
+    this = this;
+    this->unk_248 = Math_Rand_S16Offset((u16)5, (u16)0x23);
+    this->unk_250 = NULL;
+    func_80A152AC(this);
+    this->actionFunc = func_80A16670;
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A16670.s")
 
