@@ -10,8 +10,10 @@ void EnFish_Update(Actor* thisx, GlobalContext* globalCtx);
 void EnFish_Draw(Actor* thisx, GlobalContext* globalCtx);
 void func_80A15F84(EnFish*, GlobalContext*);
 void func_80A16670(EnFish*, GlobalContext*);
+void func_80A157FC(EnFish*, GlobalContext*);
 void func_80A15F24(EnFish* this);
-void func_80A16618(EnFish *this);
+void func_80A16618(EnFish* this);
+void func_80A157A4(EnFish *this);
 
 extern SkeletonHeader D_04018FE0;
 extern AnimationHeader D_0401909C;
@@ -61,7 +63,9 @@ s32 D_80A1708C[] = { 0x3F000000, 0x3DCCCCCD, 0x3E19999A, 0x00000000, 0x00000000 
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15280.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A152AC.s")
+void func_80A152AC(EnFish* this) {
+    SkelAnime_ChangeAnim(&this->skelAnime, &D_0401909C, 1.0f, 0.0f, SkelAnime_GetFrameCount(&D_0401909C.genericHeader), 1, 2.0f);
+}
 
 void func_80A15310(EnFish* this) {
     SkelAnime_ChangeAnim(&this->skelAnime, &D_040185FC, 1.0f, 0.0f, SkelAnime_GetFrameCount(&D_040185FC.genericHeader), 1, 2.0f);
@@ -106,7 +110,15 @@ void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15774.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A157A4.s")
+void func_80A157A4(EnFish *this) {
+    this->actor.gravity = 0.0f;
+    this->actor.minVelocityY = 0.0f;
+    this = this;
+    this->unk_248 = Math_Rand_S16Offset(5, 35);
+    this->unk_250 = NULL;
+    func_80A152AC(this);
+    this->actionFunc = func_80A157FC;
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A157FC.s")
 
@@ -127,7 +139,7 @@ void func_80A15F24(EnFish *this) {
     this->actor.minVelocityY = -10.0f;
     this->actor.shape.unk_08 = 0.0f;
     func_80A15310(this);
-    this->unk_250 = (void *)5;
+    this->unk_250 = 5;
     this->actionFunc = func_80A15F84;
     this->unk_248 = 0x12C;
 }
@@ -145,8 +157,7 @@ void func_80A15F24(EnFish *this) {
 void func_80A16618(EnFish *this) {
     this->actor.gravity = 0.0f;
     this->actor.minVelocityY = 0.0f;
-    this = this;
-    this->unk_248 = Math_Rand_S16Offset((u16)5, (u16)0x23);
+    this->unk_248 = Math_Rand_S16Offset(5, 35);
     this->unk_250 = NULL;
     func_80A152AC(this);
     this->actionFunc = func_80A16670;
