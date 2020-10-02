@@ -13,11 +13,13 @@ void func_80A16670(EnFish*, GlobalContext*);
 void func_80A157FC(EnFish*, GlobalContext*);
 void func_80A15944(EnFish*, GlobalContext*);
 void func_80A15B2C(EnFish*, GlobalContext*);
+void func_80A15D68(EnFish*, GlobalContext*);
 void func_80A15F24(EnFish* this);
 void func_80A16618(EnFish* this);
 void func_80A157A4(EnFish *this);
 void func_80A158EC(EnFish* this);
 void func_80A15AD4(EnFish* this);
+void func_80A15D18(EnFish* this);
 
 extern SkeletonHeader D_04018FE0;
 extern AnimationHeader D_0401909C;
@@ -179,7 +181,14 @@ void func_80A15AD4(EnFish *this) {
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15B2C.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15D18.s")
+void func_80A15D18(EnFish* this) {
+    this->actor.gravity = 0.0f;
+    this->actor.minVelocityY = 0.0f;
+    func_80A152AC(this);
+    this->unk_248 = Math_Rand_S16Offset(0xA, 0x28);
+    this->unk_250 = NULL;
+    this->actionFunc = func_80A15D68;
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15D68.s")
 
