@@ -105,10 +105,13 @@ void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
 }
 
 void EnFish_Destroy(Actor *thisx, GlobalContext *globalCtx) {
-    Collider_DestroyJntSph(globalCtx, &((EnFish*)thisx)->collider);
+    Collider_DestroyJntSph(globalCtx, &THIS->collider);
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A155D0.s")
+void func_80A155D0(EnFish *this) {
+    this->actor.shape.unk_08 += Math_Sins(this->unk24C) * 10.0f + Math_Sins(this->unk24E) * 5.0f;
+    this->actor.shape.unk_08 = CLAMP(this->actor.shape.unk_08, -200.0f, 200.0f);
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15688.s")
 
@@ -127,7 +130,7 @@ void func_80A157A4(EnFish *this) {
 void func_80A157FC(EnFish *this, GlobalContext *globalCtx) {
     f32 temp_f0;
 
-    func_80A155D0();
+    func_80A155D0(this);
     Math_SmoothScaleMaxMinF(&this->actor.speedXZ, 0.0f, 0.05f, 0.3f, 0.0f);
     temp_f0 = (this->actor.speedXZ * 1.4f) + 0.8f;
     if (2.0f < temp_f0) {
