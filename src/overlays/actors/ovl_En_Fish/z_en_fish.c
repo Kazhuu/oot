@@ -104,7 +104,9 @@ void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
     func_80A157A4(this);
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/EnFish_Destroy.s")
+void EnFish_Destroy(Actor *thisx, GlobalContext *globalCtx) {
+    Collider_DestroyJntSph(globalCtx, &((EnFish*)thisx)->collider);
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A155D0.s")
 
