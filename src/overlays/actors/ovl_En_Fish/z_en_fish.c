@@ -115,7 +115,9 @@ void func_80A155D0(EnFish *this) {
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15688.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15774.s")
+s32 func_80A15774(EnFish *this, GlobalContext *globalCtx) {
+    return this->actor.xzDistFromLink < 60.0f;
+}
 
 void func_80A157A4(EnFish *this) {
     this->actor.gravity = 0.0f;
