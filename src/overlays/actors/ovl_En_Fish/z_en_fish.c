@@ -64,10 +64,14 @@ static InitChainEntry sInitChain[] = {
     ICHAIN_F32(uncullZoneDownward, 700, ICHAIN_STOP),
 };
 
-s32 D_80A17080[] = { 0x00000000, 0x3D23D70A, 0x3DB851EC };
-s32 D_80A1708C[] = { 0x3F000000, 0x3DCCCCCD, 0x3E19999A, 0x00000000, 0x00000000 };
+Vec3f D_80A17080 = { 0.0f, 0.04f, 0.09f };
+Vec3f D_80A1708C = { 0.5f, 0.1f, 0.15f };
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15280.s")
+f32 func_80A15280(Vec3f* arg0, Vec3f *arg1) {
+    f32 temp_f2 = arg0->x - arg1->x;
+    f32 temp_f12 = arg0->z - arg1->z;
+    return (temp_f2 * temp_f2) + (temp_f12 * temp_f12);
+}
 
 void func_80A152AC(EnFish* this) {
     SkelAnime_ChangeAnim(&this->skelAnime, &D_0401909C, 1.0f, 0.0f, SkelAnime_GetFrameCount(&D_0401909C.genericHeader), 1, 2.0f);
@@ -220,6 +224,60 @@ void func_80A16618(EnFish *this) {
     func_80A152AC(this);
     this->actionFunc = func_80A16670;
 }
+
+// stack doesn't match.
+/*void func_80A16670(EnFish *this, GlobalContext *globalCtx) {*/
+    /*s16 pad;*/
+    /*f32 sp44;*/
+    /*Vec3f* phi_v0;*/
+    /*u32 frames;*/
+    /*f32 temp_f2;*/
+    /*f64 phi_f2;*/
+    /*f64 aaa = 1.5;*/
+
+
+    /*frames = globalCtx->gameplayFrames;*/
+    /*if (this->actor.xzDistFromLink < 60.0f) {*/
+        /*if (this->unk_248 < 0xC) {*/
+            /*phi_v0 = &D_80A1708C;*/
+        /*} else {*/
+            /*phi_v0 = &D_80A17080;*/
+        /*}*/
+    /*} else {*/
+        /*if (this->unk_248 < 4) {*/
+            /*phi_v0 = &D_80A1708C;*/
+        /*}*/
+        /*else {*/
+            /*phi_v0 = &D_80A17080;*/
+        /*}*/
+    /*}*/
+    /*func_80A155D0(this);*/
+    /*Math_SmoothScaleMaxMinF(&this->actor.speedXZ, phi_v0->x, phi_v0->y, phi_v0->z, 0.0f);*/
+    /*sp44 = 0.0f;*/
+    /*if (225.0f < func_80A15280(&this->actor.posRot, &this->actor.initPosRot)) {*/
+        /*if (Math_ApproxUpdateScaledS(&this->actor.posRot.rot.y, Math_Vec3f_Yaw(&this->actor.posRot.pos, &this->actor.initPosRot.pos), 0xC8) == 0) {*/
+            /*sp44 = 0.5f;*/
+        /*}*/
+    /*} else if (this->unk_248 < 4 && Math_ApproxUpdateScaledS(&this->actor.posRot.rot.y, frames << 7, 0x64) == 0) {*/
+        /*sp44 = 0.5f;*/
+    /*}*/
+    /*this->actor.shape.rot.y = this->actor.posRot.rot.y;*/
+    /*temp_f2 = this->actor.speedXZ * 1.2f + 0.2f + sp44;*/
+    /*if (temp_f2 < 1.5f) {*/
+        /*this->skelAnime.animPlaybackSpeed = aaa;*/
+    /*} else {*/
+        /*if (0.5 < temp_f2) {*/
+            /*phi_f2 = 0.5;*/
+        /*} else {*/
+            /*phi_f2 = temp_f2;*/
+        /*}*/
+        /*this->skelAnime.animPlaybackSpeed = phi_f2;*/
+    /*}*/
+    /*SkelAnime_FrameUpdateMatrix(&this->skelAnime);*/
+    /*if (this->unk_248 <= 0) {*/
+        /*this->unk_248 = Math_Rand_S16Offset(5, 0x50);*/
+    /*}*/
+/*}*/
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A16670.s")
 
