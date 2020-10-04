@@ -172,7 +172,40 @@ void func_80A158EC(EnFish* this) {
     this->actionFunc = func_80A15944;
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15944.s")
+void func_80A15944(EnFish *this, GlobalContext *arg1) {
+    f32 temp_f0;
+
+    func_80A155D0(this);
+    Math_SmoothScaleMaxMinF(&this->actor.speedXZ, 1.8f, 0.08f, 0.4f, 0.0f);
+    if ((6400.0f < func_80A15280((Vec3f *) &this->actor.posRot.pos, (Vec3f *) &this->actor.initPosRot)) || ((s32) this->unk_248 < 4)) {
+        func_80077B58(&this->actor.posRot.rot.y, (s16) ((Math_Vec3f_Yaw((Vec3f *) &this->actor.posRot.pos, (Vec3f *) &this->actor.initPosRot))), (u16)0xBB8);
+    } else {
+        if (this->actor.child != 0) {
+            if ((Actor*)this != this->actor.child) {
+                func_80077B58(&this->actor.posRot.rot.y, (s16) ((s32) (Math_Vec3f_Yaw((Vec3f *) &this->actor.posRot.pos, (Vec3f *) &this->actor.child->posRot))), (u16)0xBB8);
+            }
+        }
+    }
+    this->actor.shape.rot.y = (s16) this->actor.posRot.rot.y;
+    temp_f0 = this->actor.speedXZ * 1.5f + 0.8f;
+    if (4.0f < temp_f0) {
+        this->skelAnime.animPlaybackSpeed = 4.0f;
+    } else {
+        this->skelAnime.animPlaybackSpeed = temp_f0;
+    }
+    SkelAnime_FrameUpdateMatrix(&this->skelAnime);
+    if ((s32) this->unk_248 <= 0) {
+        func_80A157A4(this);
+        return;
+    }
+    if ((Actor*)this == this->actor.child) {
+        func_80A15D18(this);
+        return;
+    }
+    if (func_80A15774(this, arg1) != 0) {
+        func_80A15AD4(this);
+    }
+}
 
 void func_80A15AD4(EnFish *this) {
     this->actor.gravity = 0.0f;
@@ -254,7 +287,7 @@ void func_80A16618(EnFish *this) {
     /*func_80A155D0(this);*/
     /*Math_SmoothScaleMaxMinF(&this->actor.speedXZ, phi_v0->x, phi_v0->y, phi_v0->z, 0.0f);*/
     /*sp44 = 0.0f;*/
-    /*if (225.0f < func_80A15280(&this->actor.posRot, &this->actor.initPosRot)) {*/
+    /*if (225.0f < func_80A15280(&this->actor.posRot.pos, &this->actor.initPosRot.pos)) {*/
         /*if (Math_ApproxUpdateScaledS(&this->actor.posRot.rot.y, Math_Vec3f_Yaw(&this->actor.posRot.pos, &this->actor.initPosRot.pos), 0xC8) == 0) {*/
             /*sp44 = 0.5f;*/
         /*}*/
