@@ -235,7 +235,34 @@ void func_80A15F24(EnFish* this) {
     this->unk_248 = 300;
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15F84.s")
+void func_80A15F84(EnFish* this, GlobalContext* globalCtx) {
+    Math_SmoothScaleMaxMinF(&this->actor.speedXZ, 0.0f, 0.1f, 0.1f, 0.0f);
+    func_80077B58(&this->actor.posRot.rot.x, 16384, 100);
+    func_80077B58(&this->actor.posRot.rot.z, -16384, 100);
+    this->actor.shape.rot.x = this->actor.posRot.rot.x;
+    this->actor.shape.rot.y = this->actor.posRot.rot.y;
+    this->actor.shape.rot.z = this->actor.posRot.rot.z;
+    SkelAnime_FrameUpdateMatrix(&this->skelAnime);
+    if ((this->actor.bgCheckFlags & 1) != 0) {
+        this->unk_248 = 400;
+        func_80A160BC(this);
+        return;
+    }
+    if ((this->actor.bgCheckFlags & 0x20) != 0) {
+        func_80A163DC(this);
+        return;
+    }
+    if (this->unk_248 <= 0) {
+        if (this->actor.params == 0) {
+            if (this->actor.groundY < -31990.0f) {
+                osSyncPrintf((const char *) "\x1b[43;30m");
+                osSyncPrintf((const char *) "BG 抜け？ Actor_delete します(%s %d)\n", "../z_en_sakana.c", 822);
+                osSyncPrintf((const char *) "\x1b[m");
+                Actor_Kill(&this->actor);
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A160BC.s")
 
@@ -308,4 +335,9 @@ void func_80A16670(EnFish* this, GlobalContext* globalCtx) {
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/EnFish_Update.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/EnFish_Draw.s")
+void EnFish_Draw(Actor* thisx, GlobalContext* globalCtx) {
+    EnFish* this = THIS;
+    func_80093D18(globalCtx->state.gfxCtx);
+    SkelAnime_DrawSV(globalCtx, this->skelAnime.skeleton, this->skelAnime.limbDrawTbl, this->skelAnime.dListCount, 0, 0, 0);
+    func_800628A4(0, &this->collider);
+}
