@@ -16,7 +16,7 @@ void func_80A15B2C(EnFish*, GlobalContext*);
 void func_80A15D68(EnFish*, GlobalContext*);
 void func_80A15F24(EnFish* this);
 void func_80A16618(EnFish* this);
-void func_80A157A4(EnFish *this);
+void func_80A157A4(EnFish* this);
 void func_80A158EC(EnFish* this);
 void func_80A15AD4(EnFish* this);
 void func_80A15D18(EnFish* this);
@@ -88,7 +88,7 @@ void func_80A15310(EnFish* this) {
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15444.s")
 
 
-void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
+void EnFish_Init(Actor* thisx, GlobalContext* globalCtx) {
     EnFish* this = THIS;
 
     s16 sp3A = this->actor.params;
@@ -100,7 +100,7 @@ void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
     this->unk24C = Math_Rand_ZeroOne() * 65535.5f;
     this->unk24E = Math_Rand_ZeroOne() * 65535.5f;
     if (sp3A == 0) {
-        this->actor.flags = (u32) (this->actor.flags | 0x10);
+        this->actor.flags = this->actor.flags | 0x10;
         ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawFunc_Circle, 8.0f);
         func_80A15F24(this);
         return;
@@ -112,22 +112,22 @@ void EnFish_Init(Actor *thisx, GlobalContext *globalCtx) {
     func_80A157A4(this);
 }
 
-void EnFish_Destroy(Actor *thisx, GlobalContext *globalCtx) {
+void EnFish_Destroy(Actor* thisx, GlobalContext* globalCtx) {
     Collider_DestroyJntSph(globalCtx, &THIS->collider);
 }
 
-void func_80A155D0(EnFish *this) {
+void func_80A155D0(EnFish* this) {
     this->actor.shape.unk_08 += Math_Sins(this->unk24C) * 10.0f + Math_Sins(this->unk24E) * 5.0f;
     this->actor.shape.unk_08 = CLAMP(this->actor.shape.unk_08, -200.0f, 200.0f);
 }
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15688.s")
 
-s32 func_80A15774(EnFish *this, GlobalContext *globalCtx) {
+s32 func_80A15774(EnFish* this, GlobalContext* globalCtx) {
     return this->actor.xzDistFromLink < 60.0f;
 }
 
-void func_80A157A4(EnFish *this) {
+void func_80A157A4(EnFish* this) {
     this->actor.gravity = 0.0f;
     this->actor.minVelocityY = 0.0f;
     this = this;
@@ -137,19 +137,19 @@ void func_80A157A4(EnFish *this) {
     this->actionFunc = func_80A157FC;
 }
 
-void func_80A157FC(EnFish *this, GlobalContext *globalCtx) {
+void func_80A157FC(EnFish* this, GlobalContext* globalCtx) {
     f32 temp_f0;
 
     func_80A155D0(this);
     Math_SmoothScaleMaxMinF(&this->actor.speedXZ, 0.0f, 0.05f, 0.3f, 0.0f);
-    temp_f0 = (this->actor.speedXZ * 1.4f) + 0.8f;
+    temp_f0 = this->actor.speedXZ * 1.4f + 0.8f;
     if (2.0f < temp_f0) {
         this->skelAnime.animPlaybackSpeed = 2.0f;
     } else {
         this->skelAnime.animPlaybackSpeed = temp_f0;
     }
     SkelAnime_FrameUpdateMatrix(&this->skelAnime);
-    this->actor.shape.rot.y = (s16) this->actor.posRot.rot.y;
+    this->actor.shape.rot.y = this->actor.posRot.rot.y;
     if (this->unk_248 <= 0) {
         func_80A158EC(this);
         return;
@@ -166,35 +166,35 @@ void func_80A157FC(EnFish *this, GlobalContext *globalCtx) {
 void func_80A158EC(EnFish* this) {
     this->actor.gravity = 0.0f;
     this->actor.minVelocityY = 0.0f;
-    this->unk_248 = Math_Rand_S16Offset((u16)0xF, (u16)0x2D);
+    this->unk_248 = Math_Rand_S16Offset(15, 45);
     this->unk_250 = NULL;
     func_80A152AC(this);
     this->actionFunc = func_80A15944;
 }
 
-void func_80A15944(EnFish *this, GlobalContext *globalCtx) {
+void func_80A15944(EnFish* this, GlobalContext* globalCtx) {
     f32 temp;
 
     func_80A155D0(this);
     Math_SmoothScaleMaxMinF(&this->actor.speedXZ, 1.8f, 0.08f, 0.4f, 0.0f);
-    if ((6400.0f < func_80A15280((Vec3f *) &this->actor.posRot.pos, (Vec3f *) &this->actor.initPosRot)) || ((s32) this->unk_248 < 4)) {
-        func_80077B58(&this->actor.posRot.rot.y, (s16) ((Math_Vec3f_Yaw((Vec3f *) &this->actor.posRot.pos, (Vec3f *) &this->actor.initPosRot))), (u16)0xBB8);
+    if (6400.0f < func_80A15280(&this->actor.posRot.pos, &this->actor.initPosRot.pos) || this->unk_248 < 4) {
+        func_80077B58(&this->actor.posRot.rot.y, Math_Vec3f_Yaw(&this->actor.posRot.pos, &this->actor.initPosRot.pos), 3000);
     } else {
         if (this->actor.child != 0) {
-            if ((Actor*)this != this->actor.child) {
-                func_80077B58(&this->actor.posRot.rot.y, (s16) ((s32) (Math_Vec3f_Yaw((Vec3f *) &this->actor.posRot.pos, (Vec3f *) &this->actor.child->posRot))), (u16)0xBB8);
+            if (&this->actor != this->actor.child) {
+                func_80077B58(&this->actor.posRot.rot.y, Math_Vec3f_Yaw(&this->actor.posRot.pos, &this->actor.child->posRot.pos), 3000);
             }
         }
     }
-    this->actor.shape.rot.y = (s16) this->actor.posRot.rot.y;
+    this->actor.shape.rot.y = this->actor.posRot.rot.y;
     temp = this->actor.speedXZ * 1.5f + 0.8f;
     this->skelAnime.animPlaybackSpeed = CLAMP_MAX(temp, 4.0f);
     SkelAnime_FrameUpdateMatrix(&this->skelAnime);
-    if ((s32) this->unk_248 <= 0) {
+    if (this->unk_248 <= 0) {
         func_80A157A4(this);
         return;
     }
-    if ((Actor*)this == this->actor.child) {
+    if (&this->actor == this->actor.child) {
         func_80A15D18(this);
         return;
     }
@@ -203,7 +203,7 @@ void func_80A15944(EnFish *this, GlobalContext *globalCtx) {
     }
 }
 
-void func_80A15AD4(EnFish *this) {
+void func_80A15AD4(EnFish* this) {
     this->actor.gravity = 0.0f;
     this->actor.minVelocityY = 0.0f;
     this->unk_248 = Math_Rand_S16Offset(10, 40);
@@ -218,21 +218,21 @@ void func_80A15D18(EnFish* this) {
     this->actor.gravity = 0.0f;
     this->actor.minVelocityY = 0.0f;
     func_80A152AC(this);
-    this->unk_248 = Math_Rand_S16Offset(0xA, 0x28);
+    this->unk_248 = Math_Rand_S16Offset(10, 40);
     this->unk_250 = NULL;
     this->actionFunc = func_80A15D68;
 }
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15D68.s")
 
-void func_80A15F24(EnFish *this) {
+void func_80A15F24(EnFish* this) {
     this->actor.gravity = -1.0f;
     this->actor.minVelocityY = -10.0f;
     this->actor.shape.unk_08 = 0.0f;
     func_80A15310(this);
-    this->unk_250 = 5;
+    this->unk_250 = 5; // What is this?
     this->actionFunc = func_80A15F84;
-    this->unk_248 = 0x12C;
+    this->unk_248 = 300;
 }
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A15F84.s")
@@ -245,7 +245,7 @@ void func_80A15F24(EnFish *this) {
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A16450.s")
 
-void func_80A16618(EnFish *this) {
+void func_80A16618(EnFish* this) {
     this->actor.gravity = 0.0f;
     this->actor.minVelocityY = 0.0f;
     this->unk_248 = Math_Rand_S16Offset(5, 35);
@@ -254,7 +254,7 @@ void func_80A16618(EnFish *this) {
     this->actionFunc = func_80A16670;
 }
 
-void func_80A16670(EnFish *this, GlobalContext *globalCtx) {
+void func_80A16670(EnFish* this, GlobalContext* globalCtx) {
     f32 temp_f2;
     u32 frames; // important
     Vec3f* phi_v0;
