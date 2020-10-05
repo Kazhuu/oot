@@ -258,10 +258,9 @@ void func_80A16670(EnFish *this, GlobalContext *globalCtx) {
     f32 temp_f2;
     u32 frames; // important
     Vec3f* phi_v0;
-    Vec3f* aaa;
+    s32 pad;
     f32 sp44; // important
-    s16* ccc;
-    Vec3f* bbb;
+    s32 pad1;
 
     frames = globalCtx->gameplayFrames;
     if (this->actor.xzDistFromLink < 60.0f) {
@@ -281,14 +280,11 @@ void func_80A16670(EnFish *this, GlobalContext *globalCtx) {
     func_80A155D0(this);
     Math_SmoothScaleMaxMinF(&this->actor.speedXZ, phi_v0->x, phi_v0->y, phi_v0->z, 0.0f);
     sp44 = 0.0f;
-    aaa = &this->actor.posRot.pos;
-    bbb = &this->actor.initPosRot.pos;
-    ccc = &this->actor.posRot.rot.y;
-    if (225.0f < func_80A15280(aaa, bbb)) {
-        if (Math_ApproxUpdateScaledS(ccc, Math_Vec3f_Yaw(aaa, bbb), 0xC8) == 0) {
+    if (225.0f < func_80A15280(&this->actor.posRot.pos, &this->actor.initPosRot.pos)) {
+        if (Math_ApproxUpdateScaledS(&this->actor.posRot.rot.y, Math_Vec3f_Yaw(&this->actor.posRot.pos, &this->actor.initPosRot.pos), 0xC8) == 0) {
             sp44 = 0.5f;
         }
-    } else if (this->unk_248 < 4 && Math_ApproxUpdateScaledS(ccc, frames << 7, 0x64) == 0) {
+    } else if (this->unk_248 < 4 && Math_ApproxUpdateScaledS(&this->actor.posRot.rot.y, frames << 7, 0x64) == 0) {
         sp44 = 0.5f;
     }
     this->actor.shape.rot.y = this->actor.posRot.rot.y;
