@@ -172,8 +172,8 @@ void func_80A158EC(EnFish* this) {
     this->actionFunc = func_80A15944;
 }
 
-void func_80A15944(EnFish *this, GlobalContext *arg1) {
-    f32 temp_f0;
+void func_80A15944(EnFish *this, GlobalContext *globalCtx) {
+    f32 temp;
 
     func_80A155D0(this);
     Math_SmoothScaleMaxMinF(&this->actor.speedXZ, 1.8f, 0.08f, 0.4f, 0.0f);
@@ -187,12 +187,8 @@ void func_80A15944(EnFish *this, GlobalContext *arg1) {
         }
     }
     this->actor.shape.rot.y = (s16) this->actor.posRot.rot.y;
-    temp_f0 = this->actor.speedXZ * 1.5f + 0.8f;
-    if (4.0f < temp_f0) {
-        this->skelAnime.animPlaybackSpeed = 4.0f;
-    } else {
-        this->skelAnime.animPlaybackSpeed = temp_f0;
-    }
+    temp = this->actor.speedXZ * 1.5f + 0.8f;
+    this->skelAnime.animPlaybackSpeed = CLAMP_MAX(temp, 4.0f);
     SkelAnime_FrameUpdateMatrix(&this->skelAnime);
     if ((s32) this->unk_248 <= 0) {
         func_80A157A4(this);
@@ -202,7 +198,7 @@ void func_80A15944(EnFish *this, GlobalContext *arg1) {
         func_80A15D18(this);
         return;
     }
-    if (func_80A15774(this, arg1) != 0) {
+    if (func_80A15774(this, globalCtx) != 0) {
         func_80A15AD4(this);
     }
 }
