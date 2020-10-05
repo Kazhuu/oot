@@ -14,12 +14,14 @@ void func_80A157FC(EnFish*, GlobalContext*);
 void func_80A15944(EnFish*, GlobalContext*);
 void func_80A15B2C(EnFish*, GlobalContext*);
 void func_80A15D68(EnFish*, GlobalContext*);
+void func_80A16200(EnFish*, GlobalContext*);
 void func_80A15F24(EnFish* this);
 void func_80A16618(EnFish* this);
 void func_80A157A4(EnFish* this);
 void func_80A158EC(EnFish* this);
 void func_80A15AD4(EnFish* this);
 void func_80A15D18(EnFish* this);
+void func_80A160BC(EnFish* this);
 
 extern SkeletonHeader D_04018FE0;
 extern AnimationHeader D_0401909C;
@@ -264,7 +266,41 @@ void func_80A15F84(EnFish* this, GlobalContext* globalCtx) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A160BC.s")
+void func_80A160BC(EnFish* this) {
+    s32 sp24;
+    f32 temp_f0;
+    s32 phi_v0;
+
+    this->actor.gravity = -1.0f;
+    this->actor.minVelocityY = -10.0f;
+    temp_f0 = Math_Rand_ZeroOne();
+    if (temp_f0 < 0.1f) {
+        this->actor.velocity.y = Math_Rand_ZeroOne() * 3.0f + 2.5f;
+        phi_v0 = 1;
+    } else {
+        if (temp_f0 < 0.2f) {
+            this->actor.velocity.y = Math_Rand_ZeroOne() * 1.2f + 0.2f;
+            phi_v0 = 1;
+        } else {
+            this->actor.velocity.y = 0.0f;
+            if (Math_Rand_ZeroOne() < 0.2f) {
+                phi_v0 = 1;
+            } else {
+                phi_v0 = 0;
+            }
+        }
+    }
+    this->actor.shape.unk_08 = 300.0f;
+    sp24 = phi_v0;
+    func_80A15310(this);
+    this->actionFunc = func_80A16200;
+    this->unk_250 = (void *)5;
+    if (sp24 != 0) {
+        if (this->actor.draw != 0) {
+            Audio_PlayActorSound2(&this->actor, 10345);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/actors/ovl_En_Fish/func_80A16200.s")
 
